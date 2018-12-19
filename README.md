@@ -8,7 +8,8 @@ Main differences to the original FREALIGN v9.11 program are the implementation o
 
 * Alignment with local restraints in X,Y,PSI,THETA,PHI (```calcfx.f```)
 * Auto-refinement algorithm (```mult_refine_auto.com``` and ```mult_refine_auto_n.com```)
-* Focussed reconstruction, i.e. the spherical mask applied in reconstruction can be anywhere within the box - not to be confused with, albeit related to, _focussed classification_ (```mask3dmerge.f```) 
+* Focussed reconstruction (```mask3dmerge.f```) , i.e. the spherical mask applied in 3D reconstruction now can be anywhere within the box - not to be confused with, albeit related to, _focussed classification_.
+
 New parameters are explained in the template ```mparameters``` file provided.
 
 ## Installing from provided binaries
