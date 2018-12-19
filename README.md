@@ -46,5 +46,6 @@ For detailed installation and usage instructions, please refer to the original F
 
 **Comprehensive reference:**
 Grigorieff, N. _Frealign: An Exploratory Tool for Single-Particle Cryo-EM_. in (ed. Enzymology, B. T.-M. in) (Academic Press, 2016). http://dx.doi.org/10.1016/bs.mie.2016.04.013
+
 **Official website:**
 http://grigoriefflab.janelia.org/frealign
