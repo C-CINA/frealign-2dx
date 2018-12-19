@@ -38,6 +38,7 @@ make -f Makefile_linux_amd64_gnu_mp_static
 ## Using the program
 
 Getting started: http://grigoriefflab.janelia.org/frealign_getting_started
+
 Running FREALIGN: http://grigoriefflab.janelia.org/frealign_running_frealign
 
 ## Further reading
