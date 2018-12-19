@@ -1,0 +1,290 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from optparse import OptionParser
+# import matplotlib.ticker as ticker
+
+def main():
+
+	progname = os.path.basename(sys.argv[0])
+	usage = progname + """ <.par file(s)> [options] 
+
+	Given one or more FREALIGN .par files, displays the resolution at which the FSC crosses a user-given threshold. Can also plot the FSC.
+
+	"""
+	parser = OptionParser(usage)
+
+	parser.add_option("--thr", metavar=0.143, default=0.143, type="float", help="Display the resolution at which the FSC curve crosses the threshold value.")
+
+	parser.add_option("--part_fsc", action="store_true", help="Display the resolution at which the volume-normalized Single-Particle FSC curve crosses the threshold value, instead of the conventional FSC (Sindelar & Grigorieff, JSB 2012).", default=False)
+
+	parser.add_option("--both", action="store_true", help="Display both the resolution at which the FSC and the volume-normalized Single-Particle FSC curves cross the threshold value (Sindelar & Grigorieff, JSB 2012).", default=False)
+
+	parser.add_option("--plot", action="store_true", help="Generate plots of the FSC curve(s) in .png format.", default=False)
+
+	parser.add_option("--script", action="store_true", help="Use this option to simply print the resolution value instead of standard printing. Useful in scripts.", default=False)
+
+	parser.add_option("--decimals", metavar=3, default=3, type="int", help="Controls how many decimal digits of the resolution values displayed in the output. Has to be greater than zero.")
+
+	(options, args) = parser.parse_args()
+
+	command = ' '.join(sys.argv)
+
+	# parfiles = sys.argv[1:-1]
+	parfiles = args
+	# print parfiles
+
+	# thr = float(sys.argv[-1])
+	thr = options.thr
+
+	decstr = '%.'+str(options.decimals)+'f'
+
+	fsc_ensemble = np.zeros((len(parfiles),2))
+	part_fsc_ensemble = np.zeros((len(parfiles),2))
+	j = 0
+
+	for par in parfiles:
+
+		# print par
+
+		f = open(par,'r')
+		lines = f.readlines()
+		f.close()
+
+		i = 1
+		for line in reversed(lines):
+
+			values = line.split()
+
+			if len(values) >= 2:
+
+				if values[1] == 'Average':
+
+					highestres_idx = i+1 # Line index of the highest resolution bin present in the FSC
+
+				if values[1] == 'NO.':
+
+					lowestres_idx = i-1 # Line index of the lowest resolution bin present in the FSC
+					break
+		 
+			i += 1
+
+		# Convert the reversed line indices to normal order:
+		totlines = len(lines)
+
+		lowestres_idx = totlines - lowestres_idx
+		highestres_idx = totlines - highestres_idx
+
+		# print '.par file: ',sys.argv[1]
+		# print 'FSC threshold: ',sys.argv[2]
+		# print lines[lowestres_idx]
+		# print lines[highestres_idx]
+
+		if (not options.part_fsc) or options.both:
+
+			try:
+
+				i = lowestres_idx
+				i_fsc = 0
+
+				while True:
+
+					if float(lines[i+1].split()[5]) < thr and i_fsc == 0:
+
+						# We do a linear interpolation to find the value of the FSC where it crosses the threshold:
+						line_fsc_before = lines[i].split()
+						line_fsc_after = lines[i+1].split()
+						apix = float(line_fsc_before[2]) * float(line_fsc_before[3])
+						y0 = float(line_fsc_before[5])
+						x0 = float(line_fsc_before[3])
+						y1 = float(line_fsc_after[5])
+						x1 = float(line_fsc_after[3])
+						a = (y1-y0)/(x1-x0)
+						# b = y0 - a*x0
+						# rad = (thr-b)/a
+						rad = x0 + (thr-y0)/a
+						# print rad
+						# res = apix/rad
+						res = apix/x0
+						# print par+' FSC = %s @ %s A' % (line_fsc_before[5], line_fsc_before[2])
+						# fsc_ensemble[j,:] = [float(line_fsc[5]), float(line_fsc[2])]
+						if not options.script:
+
+							print par+' FSC >= %.3f up to ' % thr + decstr % res +' A'
+
+						else:
+
+							print decstr % res
+
+						# print par+' FSC = %s @ %s A' % (line_fsc_after[5], line_fsc_after[2])
+						fsc_ensemble[j,:] = [thr, res]
+						i_fsc = 1
+
+					if i_fsc:
+
+						break
+
+					i += 1
+
+			except IndexError:
+
+				line_fsc = lines[highestres_idx].split()
+				if not options.script:
+					print par+' FSC = %s @ %s A' % (line_fsc[5], line_fsc[2])
+				else:
+					print decstr % line_fsc[2]
+				fsc_ensemble[j,:] = [float(line_fsc[5]), float(line_fsc[2])]
+
+		if options.part_fsc or options.both:
+
+			try:
+
+				i = lowestres_idx
+				i_part_fsc = 0
+
+				while True:
+
+					if float(lines[i+1].split()[6]) < thr and i_part_fsc == 0:
+
+						line_part_fsc_before = lines[i].split()
+						line_part_fsc_after = lines[i+1].split()
+						apix = float(line_part_fsc_before[2]) * float(line_part_fsc_before[3])
+						y0 = float(line_part_fsc_before[6])
+						x0 = float(line_part_fsc_before[3])
+						y1 = float(line_part_fsc_after[6])
+						x1 = float(line_part_fsc_after[3])
+						a = (y1-y0)/(x1-x0)
+						# b = y0 - a*x0
+						# rad = (thr-b)/a
+						rad = x0 + (thr-y0)/a
+						# print rad
+						# res = apix/rad
+						res = apix/x0
+						# print par+'Part_FSC = %s @ %s A' % (line_part_fsc_before[6], line_part_fsc_before[2])
+						# fsc_ensemble[j,:] = [float(line_fsc[6]), float(line_fsc[2])]
+						if not options.script:
+
+							print par+' Part_FSC >= %.3f up to ' % thr + decstr % res +' A'
+
+						else:
+
+							print decstr % res
+
+						# print par+'Part_FSC = %s @ %s A' % (line_part_fsc_after[6], line_part_fsc_after[2])
+						part_fsc_ensemble[j,:] = [thr, res]
+						i_part_fsc = 1
+
+					if i_part_fsc:
+
+						break
+
+					i += 1
+
+			except IndexError:
+
+				line_part_fsc = lines[highestres_idx].split()
+				if not options.script:
+					print par+' Part_FSC = %s @ %s A\n' % (line_part_fsc[6], line_part_fsc[2])
+				else:
+					print decstr % line_part_fsc[2]
+				part_fsc_ensemble[j,:] = [float(line_part_fsc[6]), float(line_part_fsc[2])]
+
+		j += 1
+
+		if options.plot:
+
+			# Plot the FSC curves properly:
+			res = []
+			fsc = []
+			part_fsc = []
+			# print lines[lowestres_idx].split()[2],lines[highestres_idx].split()[2]
+			i = lowestres_idx
+			while i <= highestres_idx:
+
+				# print lines[i][3]
+
+				res.append(float(lines[i].split()[3]))
+
+				if not options.part_fsc or options.both:
+
+					fsc.append(float(lines[i].split()[5]))
+
+				if options.part_fsc or options.both:
+
+					part_fsc.append(float(lines[i].split()[6]))
+
+				i += 1
+
+			yvalues = [i/10.0 for i in np.arange(-10,11)]
+			yvalues.append(thr)
+			yvalues = np.array(yvalues)
+			res = np.array(res) / apix
+			# lines[lowestres_idx][2],lines[highestres_idx][2]
+
+			if not options.part_fsc or options.both:
+
+				plt.figure()
+				plt.plot(res,fsc)
+				plt.title('Fourier Shell Correlation')
+				plt.ylabel('FSC')
+				plt.xlabel('Spatial frequency (1/A)')
+				# plt.ylim(0.0,1.0)
+				ax = plt.gca()
+				# ax.yaxis.set_major_locator(ticker.FixedLocator(0.143))
+				# ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.1))
+				# plt.grid(True,'major')
+				# plt.grid(True,'minor')
+				ylim = ax.get_ylim()
+				plt.yticks(yvalues[yvalues >= ylim[0]])
+				plt.grid()
+				plt.savefig(par.split('.')[0]+'_fsc.png',dpi=200)
+				plt.close()
+
+			if options.part_fsc or options.both:
+
+				plt.figure()
+				plt.plot(res,part_fsc)
+				plt.title('Fourier Shell Correlation')
+				plt.ylabel('Part. FSC')
+				plt.xlabel('Spatial frequency (1/A)')
+				ax = plt.gca()
+				ylim = ax.get_ylim()
+				plt.yticks(yvalues[yvalues >= ylim[0]])
+				plt.grid()
+				plt.savefig(par.split('.')[0]+'_part-fsc.png',dpi=200)
+				plt.close()
+
+				if options.both:
+
+					plt.figure()
+					plt.plot(res,fsc,res,part_fsc)
+					plt.title('Fourier Shell Correlation')
+					plt.ylabel('FSC')
+					plt.xlabel('Spatial frequency (1/A)')
+					ax = plt.gca()
+					ylim = ax.get_ylim()
+					plt.yticks(yvalues[yvalues >= ylim[0]])
+					plt.grid()
+					plt.legend(['FSC','Part. FSC'])
+					plt.savefig(par.split('.')[0]+'_both-fsc.png',dpi=200)
+					plt.close()
+
+
+	# if len(parfiles) > 1 and not options.script:
+
+	#     # print fsc_ensemble
+	#     # print part_fsc_ensemble
+	#     if not options.part_fsc or options.both:
+	#     	print '\nMean ensemble FSC = %.3f @ '+decstr+' A'  % (np.mean(fsc_ensemble[:,0]), np.mean(fsc_ensemble[:,1]))
+	#     if options.part_fsc or options.both:
+	#     	print 'Mean ensemble Part_FSC = %.3f @ '+decstr+' A'  % (np.mean(part_fsc_ensemble[:,0]), np.mean(part_fsc_ensemble[:,1]))
+	#     if not options.part_fsc or options.both:
+	#     	print '\nMedian ensemble FSC = %.3f @ '+decstr+' A'  % (np.median(fsc_ensemble[:,0]), np.median(fsc_ensemble[:,1]))
+	#     if options.part_fsc or options.both:	
+	#     	print 'Median ensemble Part_FSC = %.3f @ '+decstr+' A'  % (np.median(part_fsc_ensemble[:,0]), np.median(part_fsc_ensemble[:,1]))
+
+if __name__ == "__main__":
+	main()

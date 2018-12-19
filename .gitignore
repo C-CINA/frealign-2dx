@@ -1,0 +1,3 @@
+src/*__genmod.*
+src/*.a
+src/*.o
