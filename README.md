@@ -1,7 +1,9 @@
 # frealign-2dx
 Source code of modified FREALIGN version for processing 2D crystal data:
 
-Righetto, R., Biyani, N., Kowal, J., Chami, M. & Stahlberg, H. Retrieving High-Resolution Information from Disordered 2D Crystals by Single Particle Cryo-EM. bioRxiv 488403 (2018). doi:10.1101/488403
+Righetto, R., Biyani, N., Kowal, J., Chami, M. & Stahlberg, H. _Retrieving High-Resolution Information from Disordered 2D Crystals by Single Particle Cryo-EM_. bioRxiv 488403 (2018). http://doi.org/10.1101/488403
 
-For detailed installation and usage instructions, please refer to the official FREALIGN webpage & documentation:
+For detailed installation and usage instructions, please refer to the official FREALIGN documentation & references:
 http://grigoriefflab.janelia.org/frealign
+
+Grigorieff, N. _Frealign: An Exploratory Tool for Single-Particle Cryo-EM_. in (ed. Enzymology, B. T.-M. in) (Academic Press, 2016). http://dx.doi.org/10.1016/bs.mie.2016.04.013
