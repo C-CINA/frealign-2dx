@@ -8,7 +8,7 @@ Main differences to the original FREALIGN v9.11 program are the implementation o
 
 * Alignment with local restraints in X,Y,PSI,THETA,PHI (```calcfx.f```)
 * Auto-refinement algorithm (```mult_refine_auto.com``` and ```mult_refine_auto_n.com```)
-* Focussed reconstruction (```mask3dmerge.f```) , i.e. the spherical mask applied in 3D reconstruction now can be anywhere within the box - not to be confused with, albeit related to, _focussed classification_.
+* Focussed reconstruction (```mask3dmerge.f```) , i.e. the spherical mask applied in 3D reconstruction now can be anywhere within the box. That is, the FSC and map filtering are calculated with respect to the focussed region only. Not to be confused with, albeit related to, _focussed classification_. 
 
 New parameters are explained in the template ```mparameters``` file provided.
 
@@ -38,6 +38,10 @@ make -f Makefile_linux_amd64_gnu_mp_static
 ```
 ## Using the program
 
+To start a normal FREALIGN refinement run, run the command ```frealign_run_refine```. To use the auto-refiner, run ```frealign_run_refine_auto```.
+
+For more usage information, please check:
+
 Getting started: http://grigoriefflab.janelia.org/frealign_getting_started
 
 Running FREALIGN: http://grigoriefflab.janelia.org/frealign_running_frealign
@@ -50,3 +54,7 @@ Grigorieff, N. _Frealign: An Exploratory Tool for Single-Particle Cryo-EM_. in (
 
 **Official website:**
 http://grigoriefflab.janelia.org/frealign
+
+## Contact
+
+For bug reports and feature requests, please use GitHub's issue tracker. For other information, please contact us at http://c-cina.org.
