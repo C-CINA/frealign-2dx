@@ -57,4 +57,4 @@ http://grigoriefflab.janelia.org/frealign
 
 ## Contact
 
-For bug reports and feature requests, please use GitHub's issue tracker. For other information, please contact us at http://c-cina.org.
+For bug reports and feature requests, please use GitHub's [issue tracker](http://github.com/C-CINA/frealign-2dx/issues). For other information, please contact us at http://c-cina.org.
