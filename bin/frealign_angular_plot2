@@ -3,6 +3,7 @@
 # Plot Euler angle distributions described by Frealign par file
 #
 # Alexis Rohou, September 2015
+# Modified by: Ricardo Righetto, April 2019
 #
 #help
 #help frealign_angular_plot - generate 2D plot for THETA and PHI
@@ -11,6 +12,9 @@
 #help Requires python matplotlib
 #
 set working_directory	= `pwd`
+
+# set ext = pdf
+set ext = svg
 
 if ( ! -e mparameters ) then
   echo
@@ -35,12 +39,12 @@ endif
 #
 
 set data_input		= `grep data_input mparameters | awk '{print $2}'`
-set output_fig_fn = ${data_input}_angular_plot.pdf
+set output_fig_fn = ${data_input}_${1}_angular_plot.${ext}
 
 set occ_threshold   = 80.0
 set score_threshold = 0.0
 set class           = 0
-set output_fig_fn   = ${data_input}_angular_plot.pdf
+set output_fig_fn   = ${data_input}_${1}_angular_plot.${ext}
 if ( ${2} != "" ) then
   set occ_threshold   = ${2}
 endif
@@ -49,7 +53,7 @@ if ( ${3} != "" ) then
 endif
 if ( ${4} != "" ) then
   set class           = ${4}
-  set output_fig_fn   = ${data_input}_angular_plot_class_${class}.pdf
+  set output_fig_fn   = ${data_input}_${1}_angular_plot_class_${class}.${ext}
 endif
 
 \rm $SCRATCH/tmp_all.txt >& /dev/null

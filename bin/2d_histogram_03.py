@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 #
 # Alexis Rohou, September 2015
+# Modified by: Ricardo Righetto, April 2019
 #
 import matplotlib as mpl
 import matplotlib.pyplot as plt
