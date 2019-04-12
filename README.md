@@ -2,7 +2,7 @@
 ## Overview
 Source code of the modified FREALIGN v9.11 used for processing 2D crystal data as described in:
 
-Righetto, R., Biyani, N., Kowal, J., Chami, M. & Stahlberg, H. _Retrieving High-Resolution Information from Disordered 2D Crystals by Single Particle Cryo-EM_. bioRxiv 488403 (2018). http://doi.org/10.1101/488403
+Righetto, R. D., Biyani, N., Kowal, J., Chami, M. & Stahlberg, H. _Retrieving high-resolution information from disordered 2D crystals by single-particle cryo-EM_. Nat. Commun. 10, 1722 (2019). http://doi.org/10.1038/s41467-019-09661-5
 
 Main differences to the original FREALIGN v9.11 program are the implementation of:
 
