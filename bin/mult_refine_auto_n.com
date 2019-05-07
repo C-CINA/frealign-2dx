@@ -169,7 +169,7 @@ ${1},${2}								!IFIRST,ILAST
 ${sym}									!ASYM symmetry card (I=icosahedral)
 1.0,${dstep},${target},0.0,${cs},${kV},${tx},${ty}			!RELMAG,DSTEP,TARGET,THRESH,CS,AKV,TX,TY
 ${rref},   ${rlowref},   ${rref}, ${rclas}, ${DFSTD}, ${rbf}		!RREC,RMIN,RMAX,RCLAS,DFSTD,RBFACT
-${NODE_SCRATCH}/${raw_images:t}.${extension}
+${raw_images_file}
 ${data_input}_reproject_r${4}.${extension}_${1}_${2}
 ${working_directory}/${data_input}_${prev}_r${4}.par
 ${data_input}_${start}_r${4}.par_${1}_${2}
